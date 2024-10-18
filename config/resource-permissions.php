@@ -15,12 +15,18 @@ return [
     ],
 
     'models' => [
+        // @phpstan-ignore-next-line
         'user' => \App\Models\User::class, // Default user class
         'role' => \FilippoToso\ResourcePermissions\Models\Role::class,
         'permission' => \FilippoToso\ResourcePermissions\Models\Permission::class,
     ],
 
     'finder' => (env('APP_ENV') == 'production')
-        ? \FilippoToso\ResourcePermissions\Checkers\Strategies\CacheChecker::class
-        : \FilippoToso\ResourcePermissions\Checkers\Strategies\DatabaseChecker::class,
+        ? \FilippoToso\ResourcePermissions\Finders\Strategies\CacheFinder::class
+        : \FilippoToso\ResourcePermissions\Finders\Strategies\DatabaseFinder::class,
+
+    'cache' => [
+        'prefix' => 'resource-permissions',
+        'ttl' => 60 * 60 * 24,
+    ]
 ];

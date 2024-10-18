@@ -2,10 +2,10 @@
 
 namespace FilippoToso\ResourcePermissions\Models\Pivots;
 
+use Illuminate\Database\Eloquent\Relations\MorphPivot;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class RoleUserPivot extends Pivot
+class RoleUserPivot extends MorphPivot
 {
     /**
      * Indicates if the IDs are auto-incrementing.
@@ -21,11 +21,13 @@ class RoleUserPivot extends Pivot
      */
     public function getTable()
     {
-        return config('resource-permission.tables.role_user', parent::getTable());
+        return config('resource-permissions.tables.role_user', parent::getTable());
     }
 
     /**
      * Resource relation
+     *
+     * @return MorphTo
      */
     public function resource(): MorphTo
     {

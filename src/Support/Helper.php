@@ -2,6 +2,7 @@
 
 namespace FilippoToso\ResourcePermissions\Support;
 
+use BackedEnum;
 use FilippoToso\ResourcePermissions\Data\ResourceData;
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,11 +25,15 @@ class Helper
             }
 
             if (is_numeric($role)) {
-                $results[] = (int) $role;
+                $results[] = (int)$role;
             }
 
             if (is_string($role)) {
                 $names[] = $role;
+            }
+
+            if (is_a($role, BackedEnum::class)) {
+                $results[] = $role->value;
             }
         }
 
@@ -58,11 +63,15 @@ class Helper
             }
 
             if (is_numeric($permission)) {
-                $results[] = (int) $permission;
+                $results[] = (int)$permission;
             }
 
             if (is_string($permission)) {
                 $names[] = $permission;
+            }
+
+            if (is_a($permission, BackedEnum::class)) {
+                $results[] = $permission->value;
             }
         }
 
@@ -97,6 +106,7 @@ class Helper
             ->wherePivot('resource_id', '=', $resource?->id)
             ->detach();
     }
+
 
     public static function attachRole(Model $user, int $roleId, ?ResourceData $resource = null)
     {

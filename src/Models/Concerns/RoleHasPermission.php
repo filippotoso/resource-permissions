@@ -2,6 +2,7 @@
 
 namespace FilippoToso\ResourcePermissions\Models\Concerns;
 
+use FilippoToso\ResourcePermissions\Support\Helper;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 trait RoleHasPermission
@@ -12,12 +13,22 @@ trait RoleHasPermission
     public function permissions(): BelongsToMany
     {
         return $this->belongsToMany(
-            config('resource-permission.models.role'),
-            config('resource-permission.tables.permission_role'),
+            config('resource-permissions.models.permission'),
+            config('resource-permissions.tables.permission_role'),
             'role_id',
             'permission_id',
-            'id',
-            'id'
         );
+    }
+
+    public function assignPermission($permission)
+    {
+        $permissionsIds = Helper::getPermissionsIds($permission);
+        $this->permissions()->syncWithoutDetaching($permissionsIds);
+    }
+
+    public function removePermission($permission)
+    {
+        $permissionsIds = Helper::getPermissionsIds($permission);
+        $this->permissions()->detach($permissionsIds);
     }
 }
