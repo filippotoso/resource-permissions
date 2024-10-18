@@ -16,12 +16,14 @@ class Finder implements Contract
     public static function hasRole(Model $user, $roleIds, array $resources = [null], $or = true): bool
     {
         $class = config('resource-permissions.finder');
+
         return $class::hasRole($user, $roleIds, $resources, $or);
     }
 
     public static function hasPermission(Model $user, $permissionIds, array $resources = [null], $or = true): bool
     {
         $class = config('resource-permissions.finder');
+
         return $class::hasPermission($user, $permissionIds, $resources, $or);
     }
 

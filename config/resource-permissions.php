@@ -28,5 +28,5 @@ return [
     'cache' => [
         'prefix' => 'resource-permissions',
         'ttl' => 60 * 60 * 24,
-    ]
+    ],
 ];

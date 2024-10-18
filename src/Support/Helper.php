@@ -25,7 +25,7 @@ class Helper
             }
 
             if (is_numeric($role)) {
-                $results[] = (int)$role;
+                $results[] = (int) $role;
             }
 
             if (is_string($role)) {
@@ -63,7 +63,7 @@ class Helper
             }
 
             if (is_numeric($permission)) {
-                $results[] = (int)$permission;
+                $results[] = (int) $permission;
             }
 
             if (is_string($permission)) {
@@ -106,7 +106,6 @@ class Helper
             ->wherePivot('resource_id', '=', $resource?->id)
             ->detach();
     }
-
 
     public static function attachRole(Model $user, int $roleId, ?ResourceData $resource = null)
     {

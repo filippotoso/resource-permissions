@@ -26,8 +26,6 @@ class PermissionUserPivot extends MorphPivot
 
     /**
      * Resource relation
-     *
-     * @return MorphTo
      */
     public function resource(): MorphTo
     {

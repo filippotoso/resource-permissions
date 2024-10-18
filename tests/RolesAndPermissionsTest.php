@@ -97,7 +97,6 @@ it('can assign a role to a user and checks it (with cache)', function () {
     expect($user->hasRole($role2))->toBeFalse();
 });
 
-
 it('can assign a permission to a user and checks it (with cache)', function () {
 
     config()->set('resource-permissions.finder', CacheFinder::class);

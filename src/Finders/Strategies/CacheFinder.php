@@ -7,11 +7,11 @@ use FilippoToso\ResourcePermissions\Finders\Contracts\Finder;
 use FilippoToso\ResourcePermissions\Models\Permission;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class CacheFinder implements Finder
 {
     public const USER_ROLES_KEY = '%s-user-roles-%s';
+
     public const USER_PERMISSIONS_KEY = '%s-user-permissions-%s';
 
     public static function hasRole(Model $user, $roleIds, array $resources = [null], $or = true): bool
@@ -68,8 +68,8 @@ class CacheFinder implements Finder
             $table = config('resource-permissions.tables.role_user');
 
             $permissions = Permission::withWhereHas('roles.users', function ($query) use ($user, $table) {
-                $query->where($table . '.user_type', '=', $user->getMorphClass())
-                    ->where($table . '.user_id', '=', $user->getKey());
+                $query->where($table.'.user_type', '=', $user->getMorphClass())
+                    ->where($table.'.user_id', '=', $user->getKey());
             })->get();
 
             foreach ($permissions as $permission) {
