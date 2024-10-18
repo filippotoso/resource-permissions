@@ -33,3 +33,5 @@ testbench.yaml
 
 php.bat
 test.bat
+composer.bat
+update.bat
