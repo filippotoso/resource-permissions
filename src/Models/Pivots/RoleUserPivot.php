@@ -26,8 +26,6 @@ class RoleUserPivot extends Pivot
 
     /**
      * Resource relation
-     *
-     * @return MorphTo
      */
     public function resource(): MorphTo
     {

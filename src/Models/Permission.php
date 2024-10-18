@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Permission extends Model
 {
-    use PermissionHasUser;
     use PermissionHasRole;
+    use PermissionHasUser;
 
     /**
      * The model's attributes.

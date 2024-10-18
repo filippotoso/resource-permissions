@@ -21,6 +21,7 @@ class ResourceData
 
             if (is_string($key) && is_numeric($value)) {
                 $type = static::morphClass($key);
+
                 return [new static($type, $value)];
             }
 
@@ -32,6 +33,7 @@ class ResourceData
         // [Class, id]
         if (count($resources) == 2 && (is_string($resources[0] ?? null) && (is_numeric($resources[1] ?? null)))) {
             $type = static::morphClass($resources[0]);
+
             return [new static($type, $resources[1])];
         }
 
