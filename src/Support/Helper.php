@@ -2,6 +2,7 @@
 
 namespace FilippoToso\ResourcePermissions\Support;
 
+use BackedEnum;
 use FilippoToso\ResourcePermissions\Data\ResourceData;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,6 +30,10 @@ class Helper
 
             if (is_string($role)) {
                 $names[] = $role;
+            }
+
+            if (is_a($role, BackedEnum::class)) {
+                $results[] = $role->value;
             }
         }
 
@@ -63,6 +68,10 @@ class Helper
 
             if (is_string($permission)) {
                 $names[] = $permission;
+            }
+
+            if (is_a($permission, BackedEnum::class)) {
+                $results[] = $permission->value;
             }
         }
 

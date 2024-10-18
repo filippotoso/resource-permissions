@@ -28,9 +28,10 @@ class TestCase extends Orchestra
     {
         config()->set('database.default', 'testing');
 
+        config()->set('resource-permissions.models.user', \Workbench\App\Models\User::class);
+
         $migration = include __DIR__ . '/../database/migrations/create_resource_permissions_tables.php.stub';
         $migration->up();
-
 
         $migration = include __DIR__ . '/../workbench/database/migrations/create_users_table.php';
         $migration->up();

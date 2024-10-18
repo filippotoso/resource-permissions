@@ -21,18 +21,18 @@ class ResourceData
 
             if (is_string($key) && is_numeric($value)) {
                 $type = static::morphClass($key);
-                return [new static($type, $value)];
+                return [new self($type, $value)];
             }
 
             if (is_a($value, Model::class, true)) {
-                return [new static($value->getMorphClass(), $value->getKey())];
+                return [new self($value->getMorphClass(), $value->getKey())];
             }
         }
 
         // [Class, id]
         if (count($resources) == 2 && (is_string($resources[0] ?? null) && (is_numeric($resources[1] ?? null)))) {
             $type = static::morphClass($resources[0]);
-            return [new static($type, $resources[1])];
+            return [new self($type, $resources[1])];
         }
 
         $results = [];
@@ -43,11 +43,11 @@ class ResourceData
         foreach ($resources as $key => $value) {
             if (is_string($key) && is_numeric($value)) {
                 $type = static::morphClass($key);
-                $results[] = new static($type, $value);
+                $results[] = new self($type, $value);
             }
 
             if (is_a($value, Model::class, true)) {
-                $results[] = new static($value->getMorphClass(), $value->getKey());
+                $results[] = new self($value->getMorphClass(), $value->getKey());
             }
         }
 

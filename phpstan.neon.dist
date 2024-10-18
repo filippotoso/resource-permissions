@@ -10,3 +10,6 @@ parameters:
     tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: true
+    ignoreErrors:
+        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Model::(permissions|roles)\(\)#'
+        - '#Access to an undefined property Illuminate\\Database\\Eloquent\\Model::\$users#'
