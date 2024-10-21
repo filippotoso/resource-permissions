@@ -14,6 +14,8 @@ class CacheFinder implements Finder
 
     public const USER_PERMISSIONS_KEY = '%s-user-permissions-%s';
 
+    public const ROLES_PERISSION = 'roles-permissions';
+
     public static function hasRole(Model $user, $roleIds, array $resources = [null], $or = true): bool
     {
         $prefix = config('resource-permissions.cache.prefix') ?? 'resource-permissions';
@@ -68,8 +70,8 @@ class CacheFinder implements Finder
             $table = config('resource-permissions.tables.role_user');
 
             $permissions = Permission::withWhereHas('roles.users', function ($query) use ($user, $table) {
-                $query->where($table.'.user_type', '=', $user->getMorphClass())
-                    ->where($table.'.user_id', '=', $user->getKey());
+                $query->where($table . '.user_type', '=', $user->getMorphClass())
+                    ->where($table . '.user_id', '=', $user->getKey());
             })->get();
 
             foreach ($permissions as $permission) {
@@ -100,5 +102,13 @@ class CacheFinder implements Finder
         }
 
         return $result;
+    }
+
+    public static function purgeUserCache(Model $user)
+    {
+        $prefix = config('resource-permissions.cache.prefix') ?? 'resource-permissions';
+
+        Cache::forget(sprintf(CacheFinder::USER_ROLES_KEY, $prefix, $user->getKey()));
+        Cache::forget(sprintf(CacheFinder::USER_PERMISSIONS_KEY, $prefix, $user->getKey()));
     }
 }
