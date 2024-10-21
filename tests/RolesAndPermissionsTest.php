@@ -2,6 +2,7 @@
 
 use FilippoToso\ResourcePermissions\Finders\Finder;
 use FilippoToso\ResourcePermissions\Finders\Strategies\CacheFinder;
+use FilippoToso\ResourcePermissions\Finders\Strategies\FileFinder;
 use FilippoToso\ResourcePermissions\Models\Permission;
 use Workbench\App\Models\Role;
 use Workbench\App\Models\User;
@@ -83,7 +84,7 @@ it('can assign a permission to a user through a role', function () {
 
 it('can assign a role to a user and checks it (with cache)', function () {
 
-    config()->set('resource-permissions.finder', CacheFinder::class);
+    config()->set('resource-permissions.finder', FileFinder::class);
 
     $user = User::create(['name' => 'John Snow', 'email' => 'john.snow@nightswatch.local', 'password' => 'Ygritte']);
     $role1 = Role::create(['name' => 'lord-commander']);
@@ -99,7 +100,7 @@ it('can assign a role to a user and checks it (with cache)', function () {
 
 it('can assign a permission to a user and checks it (with cache)', function () {
 
-    config()->set('resource-permissions.finder', CacheFinder::class);
+    config()->set('resource-permissions.finder', FileFinder::class);
 
     $user = User::create(['name' => 'John Snow', 'email' => 'john.snow@nightswatch.local', 'password' => 'Ygritte']);
     $permission1 = Permission::create(['name' => 'resuscitate']);
@@ -114,7 +115,7 @@ it('can assign a permission to a user and checks it (with cache)', function () {
 });
 
 it('can assign a permission to a user through a role (with cache)', function () {
-    config()->set('resource-permissions.finder', CacheFinder::class);
+    config()->set('resource-permissions.finder', FileFinder::class);
 
     $user = User::create(['name' => 'John Snow', 'email' => 'john.snow@nightswatch.local', 'password' => 'Ygritte']);
     $role = Role::create(['name' => 'lord-commander']);

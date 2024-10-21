@@ -1,6 +1,6 @@
 <?php
 
-namespace FilippoToso\ResourcePermissions\Models\Concerns;
+namespace FilippoToso\ResourcePermissions\Models\Concerns\Support;
 
 use FilippoToso\ResourcePermissions\Models\Pivots\RoleUserPivot;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;

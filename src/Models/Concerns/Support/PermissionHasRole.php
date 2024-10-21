@@ -1,7 +1,8 @@
 <?php
 
-namespace FilippoToso\ResourcePermissions\Models\Concerns;
+namespace FilippoToso\ResourcePermissions\Models\Concerns\Support;
 
+use FilippoToso\ResourcePermissions\Finders\Finder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 trait PermissionHasRole
@@ -17,5 +18,12 @@ trait PermissionHasRole
             'permission_id',
             'role_id',
         );
+    }
+
+    public static function bootedPermissionHasRole()
+    {
+        static::deleted(function ($model) {
+            Finder::purgeCache();
+        });
     }
 }

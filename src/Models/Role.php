@@ -2,14 +2,12 @@
 
 namespace FilippoToso\ResourcePermissions\Models;
 
-use FilippoToso\ResourcePermissions\Models\Concerns\RoleHasPermission;
-use FilippoToso\ResourcePermissions\Models\Concerns\RoleHasUser;
+use FilippoToso\ResourcePermissions\Models\Concerns\IsRole;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
-    use RoleHasPermission;
-    use RoleHasUser;
+    use IsRole;
 
     /**
      * The model's attributes.

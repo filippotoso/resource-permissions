@@ -19,9 +19,9 @@ class DatabaseFinder implements Finder
             foreach ($roleIds as $roleId) {
                 foreach ($resources as $resource) {
                     $query->{$method}(function ($query) use ($roleId, $resource, $table) {
-                        $query->where($table.'.role_id', $roleId)
-                            ->where($table.'.resource_type', $resource?->type)
-                            ->where($table.'.resource_id', $resource?->id);
+                        $query->where($table . '.role_id', $roleId)
+                            ->where($table . '.resource_type', $resource?->type)
+                            ->where($table . '.resource_id', $resource?->id);
                     });
                 }
             }
@@ -42,9 +42,9 @@ class DatabaseFinder implements Finder
             foreach ($permissionIds as $permissionId) {
                 foreach ($resources as $resource) {
                     $query->{$method}(function ($query) use ($permissionId, $resource, $permissionUserTable) {
-                        $query->where($permissionUserTable.'.permission_id', $permissionId)
-                            ->where($permissionUserTable.'.resource_type', $resource?->type)
-                            ->where($permissionUserTable.'.resource_id', $resource?->id);
+                        $query->where($permissionUserTable . '.permission_id', $permissionId)
+                            ->where($permissionUserTable . '.resource_type', $resource?->type)
+                            ->where($permissionUserTable . '.resource_id', $resource?->id);
                     });
                 }
             }
@@ -62,11 +62,11 @@ class DatabaseFinder implements Finder
         $query->where(function ($query) use ($permissionIds, $resources, $roleUserTable, $permissionRoleTable, $method) {
             foreach ($resources as $resource) {
                 $query->{$method}(function ($query) use ($resource, $roleUserTable, $permissionRoleTable, $permissionIds) {
-                    $query->where($roleUserTable.'.resource_type', $resource?->type)
-                        ->where($roleUserTable.'.resource_id', $resource?->id)
+                    $query->where($roleUserTable . '.resource_type', $resource?->type)
+                        ->where($roleUserTable . '.resource_id', $resource?->id)
                         ->whereHas('permissions', function ($query) use ($permissionIds, $permissionRoleTable) {
                             foreach ($permissionIds as $permissionId) {
-                                $query->where($permissionRoleTable.'.permission_id', $permissionId);
+                                $query->where($permissionRoleTable . '.permission_id', $permissionId);
                             }
                         });
                 });
@@ -74,5 +74,19 @@ class DatabaseFinder implements Finder
         });
 
         return $query->exists();
+    }
+
+    public static function rolesIdsByName(array $names = [])
+    {
+        $class = config('resource-permissions.models.role');
+
+        return $class::whereIn('name', $names)->pluck('id')->toArray();
+    }
+
+    public static function permissionsIdsByName(array $names = [])
+    {
+        $class = config('resource-permissions.models.permission');
+
+        return $class::whereIn('name', $names)->pluck('id')->toArray();
     }
 }

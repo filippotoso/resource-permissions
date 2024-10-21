@@ -2,16 +2,14 @@
 
 namespace FilippoToso\ResourcePermissions\Finders;
 
-use FilippoToso\ResourcePermissions\Finders\Contracts\Finder as Contract;
-use FilippoToso\ResourcePermissions\Finders\Strategies\CacheFinder;
+use FilippoToso\ResourcePermissions\Finders\Strategies\FileFinder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
 
 /**
  * @method static hasRole(Model $user, $roleIds, array $resources = [null], $or = true);
  * @method static hasPermission(Model $user, $permissionIds, array $resources = [null], $or = true);
  */
-class Finder implements Contract
+class Finder implements Contracts\Finder
 {
     public static function hasRole(Model $user, $roleIds, array $resources = [null], $or = true): bool
     {
@@ -27,11 +25,38 @@ class Finder implements Contract
         return $class::hasPermission($user, $permissionIds, $resources, $or);
     }
 
+    public static function purgeCache()
+    {
+        static::purgeRolesCache();
+        static::purgeUsersCache();
+    }
+
+    public static function rolesIdsByName(array $names = [])
+    {
+        $class = config('resource-permissions.finder');
+
+        return $class::rolesIdsByName($names);
+    }
+
+    public static function permissionsIdsByName(array $names = [])
+    {
+        $class = config('resource-permissions.finder');
+
+        return $class::permissionsIdsByName($names);
+    }
+
+    public static function purgeRolesCache()
+    {
+        FileFinder::purgeRolesCache();
+    }
+
+    public static function purgeUsersCache()
+    {
+        FileFinder::purgeUsersCache();
+    }
+
     public static function purgeUserCache(Model $user)
     {
-        $prefix = config('resource-permissions.cache.prefix') ?? 'resource-permissions';
-
-        Cache::forget(sprintf(CacheFinder::USER_ROLES_KEY, $prefix, $user->getKey()));
-        Cache::forget(sprintf(CacheFinder::USER_PERMISSIONS_KEY, $prefix, $user->getKey()));
+        FileFinder::purgeUserCache($user);
     }
 }

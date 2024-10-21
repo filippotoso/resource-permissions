@@ -2,14 +2,12 @@
 
 namespace FilippoToso\ResourcePermissions\Models;
 
-use FilippoToso\ResourcePermissions\Models\Concerns\PermissionHasRole;
-use FilippoToso\ResourcePermissions\Models\Concerns\PermissionHasUser;
+use FilippoToso\ResourcePermissions\Models\Concerns\IsPermission;
 use Illuminate\Database\Eloquent\Model;
 
 class Permission extends Model
 {
-    use PermissionHasRole;
-    use PermissionHasUser;
+    use IsPermission;
 
     /**
      * The model's attributes.

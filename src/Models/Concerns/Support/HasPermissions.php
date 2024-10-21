@@ -1,6 +1,6 @@
 <?php
 
-namespace FilippoToso\ResourcePermissions\Models\Concerns;
+namespace FilippoToso\ResourcePermissions\Models\Concerns\Support;
 
 use FilippoToso\ResourcePermissions\Finders\Finder;
 use FilippoToso\ResourcePermissions\Models\Pivots\PermissionUserPivot;
@@ -36,6 +36,8 @@ trait HasPermissions
                 Helper::attachPermission($this, $permissionId, $resource);
             }
         }
+
+        Finder::purgeUserCache($this);
     }
 
     public function removePermission($permission, $resource = null)
@@ -48,10 +50,14 @@ trait HasPermissions
                 Helper::detachPermission($this, $permissionId, $resource);
             }
         }
+
+        Finder::purgeUserCache($this);
     }
 
     public function syncPermissions($permissions)
     {
         $this->permissions()->sync($permissions);
+
+        Finder::purgeUserCache($this);
     }
 }

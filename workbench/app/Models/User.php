@@ -4,8 +4,7 @@ namespace Workbench\App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use FilippoToso\ResourcePermissions\Models\Concerns\HasPermissions;
-use FilippoToso\ResourcePermissions\Models\Concerns\HasRoles;
+use FilippoToso\ResourcePermissions\Models\Concerns\HasRolesAndPermissions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,7 +14,7 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    use HasPermissions, HasRoles;
+    use HasRolesAndPermissions;
 
     /**
      * The attributes that are mass assignable.

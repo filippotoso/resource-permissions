@@ -4,6 +4,7 @@ namespace FilippoToso\ResourcePermissions\Support;
 
 use BackedEnum;
 use FilippoToso\ResourcePermissions\Data\ResourceData;
+use FilippoToso\ResourcePermissions\Finders\Finder;
 use Illuminate\Database\Eloquent\Model;
 
 class Helper
@@ -40,7 +41,7 @@ class Helper
         if (count($names) > 0) {
             $results = array_merge(
                 $results,
-                $class::whereIn('name', $names)->pluck('id')->toArray()
+                Finder::rolesIdsByName($names)
             );
         }
 
@@ -78,7 +79,7 @@ class Helper
         if (count($names) > 0) {
             $results = array_merge(
                 $results,
-                $class::whereIn('name', $names)->pluck('id')->toArray()
+                Finder::permissionsIdsByName($names)
             );
         }
 
@@ -96,6 +97,8 @@ class Helper
             'resource_type' => $resource?->type,
             'resource_id' => $resource?->id,
         ]);
+
+        Finder::purgeUserCache($user);
     }
 
     public static function detachPermission(Model $user, int $permissionId, ?ResourceData $resource = null)
@@ -105,6 +108,8 @@ class Helper
             ->wherePivot('resource_type', '=', $resource?->type)
             ->wherePivot('resource_id', '=', $resource?->id)
             ->detach();
+
+        Finder::purgeUserCache($user);
     }
 
     public static function attachRole(Model $user, int $roleId, ?ResourceData $resource = null)
@@ -113,6 +118,8 @@ class Helper
             'resource_type' => $resource?->type,
             'resource_id' => $resource?->id,
         ]);
+
+        Finder::purgeUserCache($user);
     }
 
     public static function detachRole(Model $user, int $roleId, ?ResourceData $resource = null)
@@ -122,5 +129,7 @@ class Helper
             ->wherePivot('resource_type', '=', $resource?->type)
             ->wherePivot('resource_id', '=', $resource?->id)
             ->detach();
+
+        Finder::purgeUserCache($user);
     }
 }

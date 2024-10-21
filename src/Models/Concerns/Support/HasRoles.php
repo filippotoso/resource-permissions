@@ -1,8 +1,9 @@
 <?php
 
-namespace FilippoToso\ResourcePermissions\Models\Concerns;
+namespace FilippoToso\ResourcePermissions\Models\Concerns\Support;
 
 use FilippoToso\ResourcePermissions\Finders\Finder;
+use FilippoToso\ResourcePermissions\Finders\Strategies\FileFinder;
 use FilippoToso\ResourcePermissions\Models\Pivots\RoleUserPivot;
 use FilippoToso\ResourcePermissions\Support\Helper;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -36,6 +37,8 @@ trait HasRoles
                 Helper::attachRole($this, $rolesId, $resource);
             }
         }
+
+        Finder::purgeUserCache($this);
     }
 
     public function removeRole($role, $resource = null)
@@ -48,10 +51,14 @@ trait HasRoles
                 Helper::detachRole($this, $rolesId, $resource);
             }
         }
+
+        Finder::purgeUserCache($this);
     }
 
     public function syncRoles($roles)
     {
         $this->roles()->sync($roles);
+
+        Finder::purgeUserCache($this);
     }
 }
