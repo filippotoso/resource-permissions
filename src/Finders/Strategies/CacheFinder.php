@@ -70,8 +70,8 @@ class CacheFinder implements Finder
             $table = config('resource-permissions.tables.role_user');
 
             $permissions = Permission::withWhereHas('roles.users', function ($query) use ($user, $table) {
-                $query->where($table . '.user_type', '=', $user->getMorphClass())
-                    ->where($table . '.user_id', '=', $user->getKey());
+                $query->where($table.'.user_type', '=', $user->getMorphClass())
+                    ->where($table.'.user_id', '=', $user->getKey());
             })->get();
 
             foreach ($permissions as $permission) {
