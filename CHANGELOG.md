@@ -1,3 +1,5 @@
 # Changelog
 
-All notable changes to `resource-permissions` will be documented in this file.
+## Version 1
+
+Still working on small fixes and optimizations.

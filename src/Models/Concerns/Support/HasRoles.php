@@ -15,6 +15,7 @@ trait HasRoles
     public function roles(): MorphToMany
     {
         return $this->morphToMany(config('resource-permissions.models.role'), 'user', config('resource-permissions.tables.role_user'))
+            ->withPivot('resource_id', 'resource_type')
             ->using(RoleUserPivot::class);
     }
 

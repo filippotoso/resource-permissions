@@ -15,6 +15,7 @@ trait HasPermissions
     public function permissions(): MorphToMany
     {
         return $this->morphToMany(config('resource-permissions.models.permission'), 'user', config('resource-permissions.tables.permission_user'))
+            ->withPivot('resource_id', 'resource_type')
             ->using(PermissionUserPivot::class);
     }
 

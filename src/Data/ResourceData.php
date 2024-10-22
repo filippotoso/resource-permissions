@@ -12,44 +12,24 @@ class ResourceData
     {
         $resources = is_iterable($resources) ? $resources : [$resources];
 
-        // [Class => id]
-        if (count($resources) == 1) {
-            reset($resources);
-
-            $key = key($resources);
-            $value = current($resources);
-
-            if (is_string($key) && is_numeric($value)) {
-                $type = static::morphClass($key);
-
-                return [new self($type, $value)];
-            }
-
-            if (is_a($value, Model::class, true)) {
-                return [new self($value->getMorphClass(), $value->getKey())];
-            }
-        }
-
-        // [Class, id]
-        if (count($resources) == 2 && (is_string($resources[0] ?? null) && (is_numeric($resources[1] ?? null)))) {
-            $type = static::morphClass($resources[0]);
-
-            return [new self($type, $resources[1])];
-        }
-
         $results = [];
 
         // [Class => id, Class => id, etc.]
         // [Model, Model, etc.]
+        // [ResourceData, ResourceData, etc.]
 
-        foreach ($resources as $key => $value) {
-            if (is_string($key) && is_numeric($value)) {
-                $type = static::morphClass($key);
+        foreach ($resources as $class => $value) {
+            if (is_string($class) && is_numeric($value)) {
+                $type = static::morphClass($class);
                 $results[] = new self($type, $value);
             }
 
             if (is_a($value, Model::class, true)) {
                 $results[] = new self($value->getMorphClass(), $value->getKey());
+            }
+
+            if (is_a($value, ResourceData::class, true)) {
+                $results[] = $value;
             }
         }
 

@@ -34,7 +34,7 @@ class Helper
             }
 
             if (is_a($role, BackedEnum::class)) {
-                $results[] = $role->value;
+                $names[] = $role->value;
             }
         }
 
@@ -72,7 +72,7 @@ class Helper
             }
 
             if (is_a($permission, BackedEnum::class)) {
-                $results[] = $permission->value;
+                $names[] = $permission->value;
             }
         }
 
