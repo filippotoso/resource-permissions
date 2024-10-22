@@ -92,8 +92,6 @@ it('can assign a role to a user and checks it (with cache)', function () {
 
     $user->assignRole($role1);
 
-    Finder::purgeUserCache($user);
-
     expect($user->hasRole($role1))->toBeTrue();
     expect($user->hasRole($role2))->toBeFalse();
 });
@@ -107,8 +105,6 @@ it('can assign a permission to a user and checks it (with cache)', function () {
     $permission2 = Permission::create(['name' => 'die']);
 
     $user->assignPermission($permission1);
-
-    Finder::purgeUserCache($user);
 
     expect($user->hasPermission($permission1))->toBeTrue();
     expect($user->hasPermission($permission2))->toBeFalse();
@@ -125,8 +121,6 @@ it('can assign a permission to a user through a role (with cache)', function () 
 
     $role->assignPermission($permission1);
     $user->assignRole($role);
-
-    Finder::purgeUserCache($user);
 
     expect($user->hasPermission($permission1))->toBeTrue();
     expect($user->hasPermission($permission2))->toBeFalse();
