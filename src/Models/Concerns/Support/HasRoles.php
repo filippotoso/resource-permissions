@@ -3,7 +3,6 @@
 namespace FilippoToso\ResourcePermissions\Models\Concerns\Support;
 
 use FilippoToso\ResourcePermissions\Finders\Finder;
-use FilippoToso\ResourcePermissions\Finders\Strategies\FileFinder;
 use FilippoToso\ResourcePermissions\Models\Pivots\RoleUserPivot;
 use FilippoToso\ResourcePermissions\Support\Helper;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;

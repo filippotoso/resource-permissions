@@ -1,7 +1,5 @@
 <?php
 
-use FilippoToso\ResourcePermissions\Finders\Finder;
-use FilippoToso\ResourcePermissions\Finders\Strategies\CacheFinder;
 use FilippoToso\ResourcePermissions\Finders\Strategies\FileFinder;
 use FilippoToso\ResourcePermissions\Models\Permission;
 use Workbench\App\Models\Role;

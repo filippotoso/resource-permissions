@@ -10,5 +10,5 @@ use FilippoToso\ResourcePermissions\Models\Concerns\Support\HasRoles;
  */
 trait HasRolesAndPermissions
 {
-    use HasRoles, HasPermissions;
+    use HasPermissions, HasRoles;
 }

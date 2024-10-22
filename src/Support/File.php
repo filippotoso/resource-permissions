@@ -11,7 +11,7 @@ class File
     public static function remember($path, $ttl, $callback)
     {
         if (is_readable($path) && filemtime($path) >= Carbon::now()->subSeconds($ttl)->timestamp) {
-            return include($path);
+            return include $path;
         }
 
         $content = $callback();
@@ -23,18 +23,18 @@ class File
 
     public static function load($path, $default = [], $ttl = null)
     {
-        if (!is_readable($path)) {
+        if (! is_readable($path)) {
             return $default;
         }
 
-        return include($path);
+        return include $path;
     }
 
     public static function save($path, $content)
     {
         @mkdir(dirname($path), 0755, true);
 
-        file_put_contents($path, '<?php return ' . var_export($content, true) . ';');
+        file_put_contents($path, '<?php return '.var_export($content, true).';');
     }
 
     /** @see Illuminate\Filesystem\Filesystem */
