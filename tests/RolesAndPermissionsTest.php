@@ -18,7 +18,6 @@ it('can assign create a resource and parse it correctly', function () {
     expect($data[0]->type)->toBe(Project::class);
     expect($data[0]->id)->toBe($resource->id);
 
-
     ResourceData::resources([
         Project::class => $resource->id,
     ]);
