@@ -3,8 +3,8 @@
 namespace FilippoToso\ResourcePermissions\Finders\Strategies;
 
 use Carbon\Carbon;
-use FilippoToso\ResourcePermissions\Support\File;
 use FilippoToso\ResourcePermissions\Finders\Contracts\Finder;
+use FilippoToso\ResourcePermissions\Support\File;
 use Illuminate\Database\Eloquent\Model;
 
 class FileFinder implements Finder
@@ -188,7 +188,9 @@ class FileFinder implements Finder
 
     public static function purgeUserCache(Model $user)
     {
-        File::delete(static::userCachePath($user));
+        $subFolder = substr(sha1($user->getKey()), 0, 2);
+
+        File::delete(config('resource-permissions.cache.folder') . sprintf(self::USERS_PATH, $subFolder, $user->getKey()));
     }
 
     public static function purgeUsersCache()
