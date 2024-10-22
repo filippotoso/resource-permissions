@@ -14,7 +14,7 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn(string $modelName) => 'FilippoToso\\ResourcePermissions\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
+            fn (string $modelName) => 'FilippoToso\\ResourcePermissions\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
     }
 
@@ -30,14 +30,14 @@ class TestCase extends Orchestra
         config()->set('database.default', 'testing');
 
         config()->set('resource-permissions.models.user', \Workbench\App\Models\User::class);
-        config()->set('resource-permissions.cache.folder', __DIR__ . '/../workbench/storage/app/resource-permissions/');
+        config()->set('resource-permissions.cache.folder', __DIR__.'/../workbench/storage/app/resource-permissions/');
 
         Finder::purgeCache();
 
-        $migration = include __DIR__ . '/../database/migrations/create_resource_permissions_tables.php.stub';
+        $migration = include __DIR__.'/../database/migrations/create_resource_permissions_tables.php.stub';
         $migration->up();
 
-        $migration = include __DIR__ . '/../workbench/database/migrations/create_users_table.php';
+        $migration = include __DIR__.'/../workbench/database/migrations/create_users_table.php';
         $migration->up();
     }
 }
