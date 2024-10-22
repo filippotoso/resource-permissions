@@ -81,9 +81,7 @@ class FileFinder implements Finder
     {
         $ttl = config('resource-permissions.file.ttl') ?? Carbon::SECONDS_PER_MINUTE * Carbon::MINUTES_PER_HOUR * Carbon::HOURS_PER_DAY;
 
-        $subFolder = substr(sha1($user->getKey()), 0, 2);
-
-        $path = sprintf(config('resource-permissions.cache.folder') . static::USERS_PATH, $subFolder, $user->getKey());
+        $path = static::userCachePath($user);
 
         return File::remember($path, $ttl, function () use ($user) {
             $roles = $user->roles()->get();
@@ -190,9 +188,7 @@ class FileFinder implements Finder
 
     public static function purgeUserCache(Model $user)
     {
-        $subFolder = substr(sha1($user->getKey()), 0, 2);
-
-        File::delete(config('resource-permissions.cache.folder') . sprintf(self::USERS_PATH, $subFolder, $user->getKey()));
+        File::delete(static::userCachePath($user));
     }
 
     public static function purgeUsersCache()
@@ -203,5 +199,17 @@ class FileFinder implements Finder
     public static function purgeRolesCache()
     {
         File::delete(config('resource-permissions.cache.folder') . self::ROLES_PATH);
+    }
+
+    public static function purgePermissionsCache()
+    {
+        File::delete(config('resource-permissions.cache.folder') . self::PERMISSIONS_PATH);
+    }
+
+    protected static function userCachePath(Model $user)
+    {
+        $subFolder = substr(sha1($user->getKey()), 0, 2);
+
+        return config('resource-permissions.cache.folder') . sprintf(self::USERS_PATH, $subFolder, $user->getKey());
     }
 }

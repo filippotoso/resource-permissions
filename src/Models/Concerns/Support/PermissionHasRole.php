@@ -22,6 +22,14 @@ trait PermissionHasRole
 
     public static function bootedPermissionHasRole()
     {
+        static::created(function ($model) {
+            Finder::purgePermissionsCache();
+        });
+
+        static::updated(function ($model) {
+            Finder::purgePermissionsCache();
+        });
+
         static::deleted(function ($model) {
             Finder::purgeCache();
         });

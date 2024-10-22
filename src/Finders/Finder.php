@@ -50,6 +50,11 @@ class Finder implements Contracts\Finder
         FileFinder::purgeRolesCache();
     }
 
+    public static function purgePermissionsCache()
+    {
+        FileFinder::purgePermissionsCache();
+    }
+
     public static function purgeUsersCache()
     {
         FileFinder::purgeUsersCache();

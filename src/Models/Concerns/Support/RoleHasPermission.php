@@ -39,6 +39,9 @@ trait RoleHasPermission
 
     public static function bootedHasRoles()
     {
+        static::created(function ($model) {
+            Finder::purgeRolesCache();
+        });
         static::updated(function ($model) {
             Finder::purgeRolesCache();
         });
