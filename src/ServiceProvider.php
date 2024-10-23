@@ -2,6 +2,7 @@
 
 namespace FilippoToso\ResourcePermissions;
 
+use Illuminate\Support\Facades\Blade;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -19,5 +20,22 @@ class ServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasMigration('create_resource_permissions_tables');
+    }
+
+    public function packageBooted()
+    {
+        Blade::if('role', function (...$arguments) {
+            /** @disregard P1009 */
+            if ($user = auth()->user()) {
+                return $user->hasRole(...$arguments);
+            }
+        });
+
+        Blade::if('permission', function (...$arguments) {
+            /** @disregard P1009 */
+            if ($user = auth()->user()) {
+                return $user->hasPermission(...$arguments);
+            }
+        });
     }
 }
