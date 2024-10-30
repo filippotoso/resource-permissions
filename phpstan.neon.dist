@@ -12,3 +12,4 @@ parameters:
     checkModelProperties: true
     ignoreErrors:
         - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Model::(permissions|roles)\(\)#'
+        - '#Call to an undefined method Illuminate\\Foundation\\Auth\\User::(hasRole|hasPermission)#'
