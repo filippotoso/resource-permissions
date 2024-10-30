@@ -239,3 +239,30 @@ it('can assign a permission to a user through a role (with resource and cache)',
     expect($user->hasPermission($permission1))->toBeFalse();
     expect($user->hasPermission($permission2))->toBeFalse();
 });
+
+it('can assign a role to a resource and get the resource from the role', function () {
+    $user1 = User::create(['name' => 'John Snow', 'email' => 'john.snow@nightswatch.local', 'password' => 'Ygritte']);
+    $user2 = User::create(['name' => 'Ygritte Styr', 'email' => 'ygritte.styr@wildling.local', 'password' => 'John']);
+
+    $role1 = Role::create(['name' => 'lord-commander']);
+    $role2 = Role::create(['name' => 'heir']);
+
+    $project1 = Project::create([
+        'name' => 'The Wall',
+    ]);
+
+    $project2 = Project::create([
+        'name' => 'Castle Black',
+    ]);
+
+    $user1->assignRole($role1, $project1);
+
+    expect(Project::whereHasUserWithRole($user1)->count())->toBe(1);
+    expect(Project::whereHasUserWithRole($user2)->count())->toBe(0);
+
+    expect(Project::whereHasUserWithRole($user1, $role1)->count())->toBe(1);
+    expect(Project::whereHasUserWithRole($user1, $role2)->count())->toBe(0);
+
+    expect(Project::whereHasUserWithRole($user2, $role1)->count())->toBe(0);
+    expect(Project::whereHasUserWithRole($user2, $role2)->count())->toBe(0);
+});

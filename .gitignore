@@ -38,3 +38,5 @@ update.bat
 phpstan.bat
 
 workbench/storage
+
+data

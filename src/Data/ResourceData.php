@@ -14,22 +14,22 @@ class ResourceData
 
         $results = [];
 
-        // [Class => id, Class => id, etc.]
         // [Model, Model, etc.]
         // [ResourceData, ResourceData, etc.]
+        // [Class => id, Class => id, etc.]
 
         foreach ($resources as $class => $value) {
-            if (is_string($class) && is_numeric($value)) {
-                $type = static::morphClass($class);
-                $results[] = new self($type, $value);
-            }
-
             if (is_a($value, Model::class, true)) {
                 $results[] = new self($value->getMorphClass(), $value->getKey());
             }
 
             if (is_a($value, ResourceData::class, true)) {
                 $results[] = $value;
+            }
+
+            if (is_string($class) && is_numeric($value)) {
+                $type = static::morphClass($class);
+                $results[] = new self($type, $value);
             }
         }
 
