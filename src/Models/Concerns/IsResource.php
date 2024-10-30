@@ -22,12 +22,12 @@ trait IsResource
             $query->select(DB::raw(1))
                 ->from($this->getTable())
                 ->join(config('resource-permissions.tables.role_user'), function (JoinClause $join) use ($user, $rolesIds) {
-                    $join->on(config('resource-permissions.tables.role_user') . '.resource_id', '=', $this->getTable() . '.' . $this->getKeyName())
-                        ->where(config('resource-permissions.tables.role_user') . '.resource_type', '=', $this->getMorphClass())
-                        ->where(config('resource-permissions.tables.role_user') . '.user_id', '=', $user->getKey())
-                        ->where(config('resource-permissions.tables.role_user') . '.user_type', '=', $user->getMorphClass())
+                    $join->on(config('resource-permissions.tables.role_user').'.resource_id', '=', $this->getTable().'.'.$this->getKeyName())
+                        ->where(config('resource-permissions.tables.role_user').'.resource_type', '=', $this->getMorphClass())
+                        ->where(config('resource-permissions.tables.role_user').'.user_id', '=', $user->getKey())
+                        ->where(config('resource-permissions.tables.role_user').'.user_type', '=', $user->getMorphClass())
                         ->when(! is_null($rolesIds), function (JoinClause $join) use ($rolesIds) {
-                            $join->whereIn(config('resource-permissions.tables.role_user') . '.role_id', $rolesIds);
+                            $join->whereIn(config('resource-permissions.tables.role_user').'.role_id', $rolesIds);
                         });
                 });
         });
@@ -42,10 +42,10 @@ trait IsResource
             $query->select(DB::raw(1))
                 ->from($this->getTable())
                 ->join(config('resource-permissions.tables.role_user'), function (JoinClause $join) use ($rolesIds) {
-                    $join->on(config('resource-permissions.tables.role_user') . '.resource_id', '=', $this->getTable() . '.' . $this->getKeyName())
-                        ->where(config('resource-permissions.tables.role_user') . '.resource_type', '=', $this->getMorphClass())
+                    $join->on(config('resource-permissions.tables.role_user').'.resource_id', '=', $this->getTable().'.'.$this->getKeyName())
+                        ->where(config('resource-permissions.tables.role_user').'.resource_type', '=', $this->getMorphClass())
                         ->when(! is_null($rolesIds), function (JoinClause $join) use ($rolesIds) {
-                            $join->whereIn(config('resource-permissions.tables.role_user') . '.role_id', $rolesIds);
+                            $join->whereIn(config('resource-permissions.tables.role_user').'.role_id', $rolesIds);
                         });
                 });
         });
