@@ -3,6 +3,7 @@
 use FilippoToso\ResourcePermissions\Data\ResourceData;
 use FilippoToso\ResourcePermissions\Finders\Strategies\FileFinder;
 use FilippoToso\ResourcePermissions\Models\Permission;
+use Illuminate\Support\Facades\DB;
 use Workbench\App\Models\Project;
 use Workbench\App\Models\Role;
 use Workbench\App\Models\User;

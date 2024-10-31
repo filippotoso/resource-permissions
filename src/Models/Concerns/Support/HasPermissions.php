@@ -19,12 +19,17 @@ trait HasPermissions
             ->using(PermissionUserPivot::class);
     }
 
-    public function hasPermission($permission, $resource = null, $or = true)
+    public function hasPermission($permission, $resource = null, $or = true, $strict = true)
     {
         $permissionsIds = Helper::getPermissionsIds($permission);
         $resources = is_null($resource) ? [$resource] : Helper::getResources($resource);
 
-        return Finder::hasPermission($this, $permissionsIds, $resources, $or);
+        return Finder::hasPermission($this, $permissionsIds, $resources, $or, $strict);
+    }
+
+    public function hasPermissionWithAnyResource($permission, $or = true)
+    {
+        return $this->hasPermission($permission, null, $or, false);
     }
 
     public function assignPermission($permission, $resource = null)

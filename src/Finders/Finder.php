@@ -6,23 +6,23 @@ use FilippoToso\ResourcePermissions\Finders\Strategies\FileFinder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @method static hasRole(Model $user, $roleIds, array $resources = [null], $or = true);
- * @method static hasPermission(Model $user, $permissionIds, array $resources = [null], $or = true);
+ * @method static hasRole(Model $user, $roleIds, array $resources = [null], $or = true, $strict = true);
+ * @method static hasPermission(Model $user, $permissionIds, array $resources = [null], $or = true, $strict = true);
  */
 class Finder implements Contracts\Finder
 {
-    public static function hasRole(Model $user, $roleIds, array $resources = [null], $or = true): bool
+    public static function hasRole(Model $user, $roleIds, array $resources = [null], $or = true, $strict = true): bool
     {
         $class = config('resource-permissions.finder');
 
-        return $class::hasRole($user, $roleIds, $resources, $or);
+        return $class::hasRole($user, $roleIds, $resources, $or, $strict);
     }
 
-    public static function hasPermission(Model $user, $permissionIds, array $resources = [null], $or = true): bool
+    public static function hasPermission(Model $user, $permissionIds, array $resources = [null], $or = true, $strict = true): bool
     {
         $class = config('resource-permissions.finder');
 
-        return $class::hasPermission($user, $permissionIds, $resources, $or);
+        return $class::hasPermission($user, $permissionIds, $resources, $or, $strict);
     }
 
     public static function purgeCache()

@@ -19,12 +19,17 @@ trait HasRoles
             ->using(RoleUserPivot::class);
     }
 
-    public function hasRole($role, $resource = null, $or = true)
+    public function hasRole($role, $resource = null, $or = true, $strict = true)
     {
         $rolesIds = Helper::getRolesIds($role);
         $resources = is_null($resource) ? [$resource] : Helper::getResources($resource);
 
-        return Finder::hasRole($this, $rolesIds, $resources, $or);
+        return Finder::hasRole($this, $rolesIds, $resources, $or, $strict);
+    }
+
+    public function hasRoleWithAnyResource($role, $or = true)
+    {
+        return $this->hasRole($role, null, $or, false);
     }
 
     public function assignRole($role, $resource = null)

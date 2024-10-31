@@ -27,13 +27,13 @@ class FileFinder implements Finder
     /**
      * Contains user's roles and user's direct permissions mapped using names and ids as keys
      */
-    protected const USERS_PATH = self::USERS_DIRECTORY.'/%s/%s.php';
+    protected const USERS_PATH = self::USERS_DIRECTORY . '/%s/%s.php';
 
     protected static function rolesCache()
     {
         $ttl = config('resource-permissions.file.ttl') ?? Carbon::SECONDS_PER_MINUTE * Carbon::MINUTES_PER_HOUR * Carbon::HOURS_PER_DAY;
 
-        $path = config('resource-permissions.cache.folder').static::ROLES_PATH;
+        $path = config('resource-permissions.cache.folder') . static::ROLES_PATH;
 
         return File::remember($path, $ttl, function () {
             $class = config('resource-permissions.models.role');
@@ -57,7 +57,7 @@ class FileFinder implements Finder
     {
         $ttl = config('resource-permissions.file.ttl') ?? Carbon::SECONDS_PER_MINUTE * Carbon::MINUTES_PER_HOUR * Carbon::HOURS_PER_DAY;
 
-        $path = config('resource-permissions.cache.folder').static::PERMISSIONS_PATH;
+        $path = config('resource-permissions.cache.folder') . static::PERMISSIONS_PATH;
 
         return File::remember($path, $ttl, function () {
             $class = config('resource-permissions.models.permission');
@@ -105,7 +105,7 @@ class FileFinder implements Finder
         });
     }
 
-    public static function hasRole(Model $user, $roleIds, array $resources = [null], $or = true): bool
+    public static function hasRole(Model $user, $roleIds, array $resources = [null], $or = true, $strict = true): bool
     {
         $userCache = static::userCache($user);
         $rolesCache = static::rolesCache();
@@ -116,7 +116,9 @@ class FileFinder implements Finder
             foreach ($resources as $resource) {
 
                 // If the roles exists and has been assigned to the user
-                $current = isset($rolesCache['roles'][$roleId]) && isset($userCache['roles'][$roleId][$resource?->type ?? ''][$resource?->id ?? '']);
+                $current = ($strict)
+                    ? isset($rolesCache['roles'][$roleId]) && isset($userCache['roles'][$roleId][$resource?->type ?? ''][$resource?->id ?? ''])
+                    : isset($rolesCache['roles'][$roleId]) && isset($userCache['roles'][$roleId]);
 
                 $result = $result && $current;
 
@@ -130,7 +132,7 @@ class FileFinder implements Finder
         return $result;
     }
 
-    public static function hasPermission(Model $user, $permissionIds, array $resources = [null], $or = true): bool
+    public static function hasPermission(Model $user, $permissionIds, array $resources = [null], $or = true, $strict = true): bool
     {
         $userCache = static::userCache($user);
 
@@ -157,7 +159,9 @@ class FileFinder implements Finder
             foreach ($resources as $resource) {
 
                 // If the permission exists and has been assigned to the user
-                $current = isset($permissionsCache['permissions'][$permissionId]) && isset($mapped[$permissionId][$resource?->type ?? ''][$resource?->id ?? '']);
+                $current = ($strict)
+                    ? isset($permissionsCache['permissions'][$permissionId]) && isset($mapped[$permissionId][$resource?->type ?? ''][$resource?->id ?? ''])
+                    : isset($permissionsCache['permissions'][$permissionId]) && isset($mapped[$permissionId]);
 
                 $result = $result && $current;
 
@@ -193,28 +197,28 @@ class FileFinder implements Finder
     {
         $subFolder = substr(sha1($user->getKey()), 0, 2);
 
-        File::delete(config('resource-permissions.cache.folder').sprintf(self::USERS_PATH, $subFolder, $user->getKey()));
+        File::delete(config('resource-permissions.cache.folder') . sprintf(self::USERS_PATH, $subFolder, $user->getKey()));
     }
 
     public static function purgeUsersCache()
     {
-        File::deleteDirectory(config('resource-permissions.cache.folder').self::USERS_DIRECTORY);
+        File::deleteDirectory(config('resource-permissions.cache.folder') . self::USERS_DIRECTORY);
     }
 
     public static function purgeRolesCache()
     {
-        File::delete(config('resource-permissions.cache.folder').self::ROLES_PATH);
+        File::delete(config('resource-permissions.cache.folder') . self::ROLES_PATH);
     }
 
     public static function purgePermissionsCache()
     {
-        File::delete(config('resource-permissions.cache.folder').self::PERMISSIONS_PATH);
+        File::delete(config('resource-permissions.cache.folder') . self::PERMISSIONS_PATH);
     }
 
     protected static function userCachePath(Model $user)
     {
         $subFolder = substr(sha1($user->getKey()), 0, 2);
 
-        return config('resource-permissions.cache.folder').sprintf(self::USERS_PATH, $subFolder, $user->getKey());
+        return config('resource-permissions.cache.folder') . sprintf(self::USERS_PATH, $subFolder, $user->getKey());
     }
 }
