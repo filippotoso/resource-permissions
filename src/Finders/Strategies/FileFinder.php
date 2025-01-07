@@ -179,18 +179,14 @@ class FileFinder implements Finder
     {
         $roles = static::rolesCache();
 
-        return array_filter($roles['names'], function ($name) use ($names) {
-            return in_array($name, $names);
-        });
+        return array_intersect_key($roles['names'], array_combine($names, $names));
     }
 
     public static function permissionsIdsByName(array $names = [])
     {
         $permissions = static::permissionsCache();
 
-        return array_filter($permissions['names'], function ($name) use ($names) {
-            return in_array($name, $names);
-        });
+        return array_intersect_key($permissions['names'], array_combine($names, $names));
     }
 
     public static function purgeUserCache(Model $user)
