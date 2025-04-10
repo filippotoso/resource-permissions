@@ -24,6 +24,10 @@ trait HasRoles
         $rolesIds = Helper::getRolesIds($role);
         $resources = is_null($resource) ? [$resource] : Helper::getResources($resource);
 
+        if (count($resources) == 0) {
+            return false;
+        }
+
         return Finder::hasRole($this, $rolesIds, $resources, $or, $strict);
     }
 

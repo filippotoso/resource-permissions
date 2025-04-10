@@ -24,6 +24,10 @@ trait HasPermissions
         $permissionsIds = Helper::getPermissionsIds($permission);
         $resources = is_null($resource) ? [$resource] : Helper::getResources($resource);
 
+        if (count($resources) == 0) {
+            return false;
+        }
+
         return Finder::hasPermission($this, $permissionsIds, $resources, $or, $strict);
     }
 
