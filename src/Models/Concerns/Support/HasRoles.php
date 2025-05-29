@@ -20,14 +20,25 @@ trait HasRoles
             ->using(RoleUserPivot::class);
     }
 
-    public function scopeWhereHasRoleWithResource(Builder $query, $role, $resource, $or = true)
+    public function scopeWhereHasRoleWithResource(Builder $query, $role, $resource, $or = true, $closure = null)
     {
+        $this->internalScopeHasRoleWithResource('whereHas', $query, $role, $resource, $or, $closure);
+    }
+
+    public function scopeWithWhereHasRoleWithResource(Builder $query, $role, $resource, $or = true, $closure = null)
+    {
+        $this->internalScopeHasRoleWithResource('withWhereHas', $query, $role, $resource, $or, $closure);
+    }
+
+    public function internalScopeHasRoleWithResource($method, Builder $query, $role, $resource, $or = true, $closure = null)
+    {
+
         $rolesIds = Helper::getRolesIds($role);
         $resources = is_null($resource) ? [$resource] : Helper::getResources($resource);
 
         $table = config('resource-permissions.tables.role_user');
 
-        $query->whereHas('roles', function ($query) use ($rolesIds, $resources, $or, $table) {
+        $query->$method('roles', function ($query) use ($rolesIds, $resources, $or, $closure, $table) {
             $query->whereIn($table . '.role_id', $rolesIds)
                 ->where(function ($query) use ($resources, $or, $table) {
                     $where = ($or) ? 'orWhere' : 'where';
@@ -36,6 +47,8 @@ trait HasRoles
                         $query->{$where}($table . '.resource_type', '=', $resource->type)
                             ->{$where}($table . '.resource_id', '=', $resource->id);
                     }
+                })->when(is_callable($closure), function ($query) use ($closure) {
+                    $closure($query);
                 });
         });
     }
