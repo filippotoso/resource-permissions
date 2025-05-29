@@ -5,8 +5,8 @@ namespace FilippoToso\ResourcePermissions\Models\Concerns\Support;
 use FilippoToso\ResourcePermissions\Finders\Finder;
 use FilippoToso\ResourcePermissions\Models\Pivots\RoleUserPivot;
 use FilippoToso\ResourcePermissions\Support\Helper;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * Trait for your User models to add roles.
