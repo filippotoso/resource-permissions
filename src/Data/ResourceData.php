@@ -20,7 +20,7 @@ class ResourceData
 
         foreach ($resources as $class => $value) {
             if (is_a($value, Model::class, true)) {
-                $results[] = new self($value->getMorphClass(), $value->getKey());
+                $results[] = new self($value->getMorphClass(), $value->getKey() ?? 0);
             }
 
             if (is_a($value, ResourceData::class, true)) {
