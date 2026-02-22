@@ -135,37 +135,105 @@ class FileFinder implements Finder
     public static function hasPermission(Model $user, $permissionIds, array $resources = [null], $or = true, $strict = true): bool
     {
         $userCache = static::userCache($user);
-
         $rolesCache = static::rolesCache();
-
         $permissionsCache = static::permissionsCache();
 
-        $mapped = $userCache['permissions'];
+        // Direct permissions: permissionId => [resourceType => [resourceId => true]]
+        $direct = $userCache['permissions'];
 
+        // Merged permissions (direct + from any role) for $or or single-permission checks
+        $mapped = $userCache['permissions'];
         foreach ($userCache['roles'] as $roleId => $roleResources) {
+            $rolePermissionIds = $rolesCache['roles'][$roleId] ?? [];
             foreach ($roleResources as $roleResourceType => $roleResourceIds) {
                 foreach ($roleResourceIds as $roleResourceId => $value) {
-                    $rolePermissionsIds = $rolesCache['roles'][$roleId] ?? [];
-                    foreach ($rolePermissionsIds as $rolePermissionsId) {
-                        $mapped[$rolePermissionsId][$roleResourceType][$roleResourceId] = true;
+                    foreach ($rolePermissionIds as $rolePermissionId) {
+                        $mapped[$rolePermissionId][$roleResourceType][$roleResourceId] = true;
                     }
                 }
             }
         }
 
-        $result = true;
+        // When $or=false and multiple permissionIds: match DatabaseFinder — require (all direct) OR (one role has all)
+        if (! $or && count($permissionIds) > 1) {
+            foreach ($resources as $resource) {
+                $type = $resource?->type ?? '';
+                $id = $resource?->id ?? '';
 
+                $allDirect = true;
+                foreach ($permissionIds as $permissionId) {
+                    if (! isset($permissionsCache['permissions'][$permissionId])) {
+                        $allDirect = false;
+                        break;
+                    }
+                    if ($strict) {
+                        if (! isset($direct[$permissionId][$type][$id])) {
+                            $allDirect = false;
+                            break;
+                        }
+                    } else {
+                        if (! isset($direct[$permissionId])) {
+                            $allDirect = false;
+                            break;
+                        }
+                    }
+                }
+                if ($allDirect) {
+                    continue;
+                }
+
+                $oneRoleHasAll = false;
+                if ($strict) {
+                    foreach ($userCache['roles'] as $roleId => $roleResources) {
+                        if (! isset($roleResources[$type][$id])) {
+                            continue;
+                        }
+                        $rolePermIds = $rolesCache['roles'][$roleId] ?? [];
+                        $roleHasAll = true;
+                        foreach ($permissionIds as $permissionId) {
+                            if (! in_array($permissionId, $rolePermIds)) {
+                                $roleHasAll = false;
+                                break;
+                            }
+                        }
+                        if ($roleHasAll) {
+                            $oneRoleHasAll = true;
+                            break;
+                        }
+                    }
+                } else {
+                    foreach ($userCache['roles'] as $roleId => $roleResources) {
+                        $rolePermIds = $rolesCache['roles'][$roleId] ?? [];
+                        $roleHasAll = true;
+                        foreach ($permissionIds as $permissionId) {
+                            if (! in_array($permissionId, $rolePermIds)) {
+                                $roleHasAll = false;
+                                break;
+                            }
+                        }
+                        if ($roleHasAll) {
+                            $oneRoleHasAll = true;
+                            break;
+                        }
+                    }
+                }
+                if (! $oneRoleHasAll) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        $result = true;
         foreach ($permissionIds as $permissionId) {
             foreach ($resources as $resource) {
-
-                // If the permission exists and has been assigned to the user
                 $current = ($strict)
                     ? isset($permissionsCache['permissions'][$permissionId]) && isset($mapped[$permissionId][$resource?->type ?? ''][$resource?->id ?? ''])
                     : isset($permissionsCache['permissions'][$permissionId]) && isset($mapped[$permissionId]);
 
                 $result = $result && $current;
 
-                // Stops at the first success if it's an $or matching
                 if ($or && $current) {
                     return true;
                 }
@@ -178,15 +246,27 @@ class FileFinder implements Finder
     public static function rolesIdsByName(array $names = [])
     {
         $roles = static::rolesCache();
+        $result = [];
+        foreach ($names as $name) {
+            if (isset($roles['names'][$name])) {
+                $result[] = $roles['names'][$name];
+            }
+        }
 
-        return array_intersect_key($roles['names'], array_combine($names, $names));
+        return $result;
     }
 
     public static function permissionsIdsByName(array $names = [])
     {
         $permissions = static::permissionsCache();
+        $result = [];
+        foreach ($names as $name) {
+            if (isset($permissions['names'][$name])) {
+                $result[] = $permissions['names'][$name];
+            }
+        }
 
-        return array_intersect_key($permissions['names'], array_combine($names, $names));
+        return $result;
     }
 
     public static function purgeUserCache(Model $user)
