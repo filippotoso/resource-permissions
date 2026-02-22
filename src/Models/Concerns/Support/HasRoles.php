@@ -48,18 +48,18 @@ trait HasRoles
         $table = config('resource-permissions.tables.role_user');
 
         $query->$method('roles', function ($query) use ($rolesIds, $resources, $or, $closure, $table) {
-            $query->whereIn($table . '.role_id', $rolesIds)
+            $query->whereIn($table.'.role_id', $rolesIds)
                 ->where(function ($query) use ($resources, $or, $table) {
                     $where = ($or) ? 'orWhere' : 'where';
 
                     foreach ($resources as $resource) {
                         $query->{$where}(function ($query) use ($resource, $table) {
                             if (is_null($resource)) {
-                                $query->whereNull($table . '.resource_type')
-                                    ->whereNull($table . '.resource_id');
+                                $query->whereNull($table.'.resource_type')
+                                    ->whereNull($table.'.resource_id');
                             } else {
-                                $query->where($table . '.resource_type', '=', $resource->type)
-                                    ->where($table . '.resource_id', '=', $resource->id);
+                                $query->where($table.'.resource_type', '=', $resource->type)
+                                    ->where($table.'.resource_id', '=', $resource->id);
                             }
                         });
                     }
