@@ -2,7 +2,12 @@
 
 // config for FilippoToso/ResourcePermission
 
+use App\Models\User;
 use Carbon\Carbon;
+use FilippoToso\ResourcePermissions\Finders\Strategies\DatabaseFinder;
+use FilippoToso\ResourcePermissions\Finders\Strategies\FileFinder;
+use FilippoToso\ResourcePermissions\Models\Permission;
+use FilippoToso\ResourcePermissions\Models\Role;
 use Illuminate\Support\Str;
 
 return [
@@ -19,15 +24,15 @@ return [
 
     'models' => [
         // @phpstan-ignore-next-line
-        'user' => \App\Models\User::class, // Default user class
-        'role' => \FilippoToso\ResourcePermissions\Models\Role::class,
-        'permission' => \FilippoToso\ResourcePermissions\Models\Permission::class,
+        'user' => User::class, // Default user class
+        'role' => Role::class,
+        'permission' => Permission::class,
     ],
 
     // Use file finder in production, database finder in development
     'finder' => (env('APP_ENV') == 'production')
-        ? \FilippoToso\ResourcePermissions\Finders\Strategies\FileFinder::class
-        : \FilippoToso\ResourcePermissions\Finders\Strategies\DatabaseFinder::class,
+        ? FileFinder::class
+        : DatabaseFinder::class,
 
     // The FileFinder will cache the results into files for a certain amount of time
     'cache' => [

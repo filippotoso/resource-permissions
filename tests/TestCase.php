@@ -6,6 +6,7 @@ use FilippoToso\ResourcePermissions\Finders\Finder;
 use FilippoToso\ResourcePermissions\ServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Workbench\App\Models\User;
 
 class TestCase extends Orchestra
 {
@@ -29,7 +30,7 @@ class TestCase extends Orchestra
     {
         config()->set('database.default', 'testing');
 
-        config()->set('resource-permissions.models.user', \Workbench\App\Models\User::class);
+        config()->set('resource-permissions.models.user', User::class);
         config()->set('resource-permissions.cache.folder', __DIR__.'/../workbench/storage/app/resource-permissions/');
 
         Finder::purgeCache();
